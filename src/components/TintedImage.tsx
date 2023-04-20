@@ -6,10 +6,7 @@ interface Props {
   imageUrl: string;
   tintOpacity: number;
   bgColor: string;
-  headerText: string;
-  txtColor: string;
   onImageUrlLoad: (url: string) => void;
-  fontSize: number;
 }
 
 function hexToRgb(hex: string): string | null {
@@ -29,7 +26,7 @@ function hexToRgb(hex: string): string | null {
   return rgb;
 }
 
-const TintedImage: React.FC<Props> = ({ imageUrl, onImageUrlLoad, tintOpacity, fontSize, bgColor, headerText, txtColor }) => {
+const TintedImage: React.FC<Props> = ({ imageUrl, onImageUrlLoad, tintOpacity, bgColor }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const finalColor = hexToRgb(bgColor)
 
@@ -50,17 +47,6 @@ const TintedImage: React.FC<Props> = ({ imageUrl, onImageUrlLoad, tintOpacity, f
           ctx.fillStyle = `rgba(${finalColor}, ${tintOpacity})`;
           ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
-
-        ctx.font = `bold ${fontSize}px Arial`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        const text = headerText;
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        ctx.fillStyle = txtColor;
-        ctx.globalAlpha = 1;
-        // Draw the text onto the canvas at the center coordinates
-        ctx.fillText(text, centerX, centerY);
 
         // Get the URL of the modified image and pass it back to the parent component
         const modifiedImageUrl = canvas.toDataURL();

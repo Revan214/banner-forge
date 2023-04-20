@@ -2,20 +2,16 @@ import { useState, useRef, useEffect } from 'react'
 import './App.css'
 import { Divider } from '@mantine/core';
 import { TextInput, Slider, RangeSlider } from '@mantine/core';
-import { Button, Card, Text, Group, FileButton, BackgroundImage, Image } from '@mantine/core';
+import { Button, Card, Text, Group, FileButton, BackgroundImage, Image as MantineImage } from '@mantine/core';
 import { Container, Grid, SimpleGrid, Skeleton, useMantineTheme, rem } from '@mantine/core';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
 import { Checkbox, NumberInput } from '@mantine/core';
+import CroppedImage from './components/CroppedImage';
 
 import TintedImage from './components/TintedImage';
 
 const PRIMARY_COL_HEIGHT = rem(500);
-
-interface Props {
-  imageUrl: string;
-  tintOpacity: number;
-}
 
 const defaultBlob = new Blob(['default text'], { type: 'text/plain' });
 const defaultBlobUrl = URL.createObjectURL(defaultBlob);
@@ -24,14 +20,16 @@ function App() {
 
   //['#ff3131', '#ff5757', '#ff66c4', '#cb6ce6', '#8c52ff', '#5e17eb', '#0097b2', '#0cc0df', '#5ce1e6', '#38b6ff', '#5271ff', '#004aad', '#00bf63', '#7ed975', '#c1ff72', '#ffde59', '#ffbd59', '#ff914d']
   const [file, setFile] = useState<File | null>(null);
-  const [bgColor, setBgColor] = useState("")
-  const [txtColor, setTxtColor] = useState("#ff3131")
-  const [fontSize, setFontSize] = useState<number>(50)
-  const [opacity, setOpacity] = useState<number>(0)
-  const [header, setHeader] = useState<string>("")
+  const [bgColor, setBgColor] = useState("#000000")
+  const [txtColor, setTxtColor] = useState("#a6a6a6")
+  const [fontSize, setFontSize] = useState<number>(100)
+  const [opacity, setOpacity] = useState<number>(60)
+  const [header, setHeader] = useState<string>("Header")
   const [imageUrl, setImageUrl] = useState<string>("")
+  const [croppedImageUrl, setCroppedImageUrl] = useState<string>("")
   const theme = useMantineTheme();
   const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - ${theme.spacing.md} / 2)`;
+
   function setTint(event: React.MouseEvent<HTMLButtonElement>) {
     let colorTint = event.currentTarget.id
     setBgColor(colorTint)
@@ -42,20 +40,9 @@ function App() {
     setTxtColor(txtTint)
   }
 
-  function setImageHeight(event: any) {
-    setHeight(event.currentTarget.value)
-  }
-
-  function setImageWidth(event: any) {
-    setWidth(event.currentTarget.value)
-  }
-
   function handleTextChange(newText: any) {
     setHeader(newText.currentTarget.value);
   };
-  
-  const [height, setHeight] = useState<number>();
-  const [width, setWidth] = useState<number>();
 
   const handleDrop = (acceptedFiles: File[]) => {
     if (acceptedFiles.length) {
@@ -109,8 +96,9 @@ function App() {
                   <Divider orientation="vertical" />
                   {file && (
                     <Card sx={{ height: "100%" }}>
-                      <TintedImage onImageUrlLoad={setImageUrl} imageUrl={URL.createObjectURL(file)} bgColor={bgColor} txtColor={txtColor} headerText={header} fontSize={fontSize} tintOpacity={opacity / 100} />
-                      <Image src={imageUrl} id='image' />
+                      <TintedImage onImageUrlLoad={setImageUrl} imageUrl={URL.createObjectURL(file)} bgColor={bgColor} tintOpacity={opacity / 100} />
+                      <CroppedImage txtColor={txtColor} headerText={header} fontSize={fontSize} imageUrl={imageUrl} setImageUrl={setCroppedImageUrl} width={1280} height={720} />
+                      <MantineImage src={croppedImageUrl} id='image' />
                     </Card>
                   )}
                 </Group>
@@ -120,8 +108,14 @@ function App() {
               <Card radius="md" h='100%'>
 
                 <div className='bg-color buttons'>
-                  <Text weight={1000} sx={{ marginBottom: '5%' }}>Background Opacity Color:</Text>
-                  <Slider onChange={setOpacity} sx={{ marginBottom: '11%' }} />
+                  <Text  weight={1000} sx={{ marginBottom: '5%' }}>Background Opacity Color:</Text>
+                  <Slider defaultValue={60} onChange={setOpacity} sx={{ marginBottom: '11%' }} />
+                  <Button id='#000000' onClick={setTint} color="Black"></Button>
+                  <Button id='#545454' onClick={setTint} color="Dark Gray"></Button>
+                  <Button id='#737373' onClick={setTint} color="Gray"></Button>
+                  <Button id='#a6a6a6' onClick={setTint} color="Light Gray"></Button>
+                  <Button id='#d9d9d9' onClick={setTint} color="Lighter Gray"></Button>
+                  <Button id='#ffffff' onClick={setTint} color="White"></Button><br />
                   <Button id='#ff3131' onClick={setTint} color="Bright Red"></Button>
                   <Button id='#ff5757' onClick={setTint} color="Coral Red"></Button>
                   <Button id='#ff66c4' onClick={setTint} color="Pink"></Button>
@@ -155,6 +149,12 @@ function App() {
                     withAsterisk
                     sx={{ marginBottom: '5%' }}
                   />
+                  <Button id='#000000' onClick={setFontColor} color="Black"></Button>
+                  <Button id='#545454' onClick={setFontColor} color="Dark Gray"></Button>
+                  <Button id='#737373' onClick={setFontColor} color="Gray"></Button>
+                  <Button id='#a6a6a6' onClick={setFontColor} color="Light Gray"></Button>
+                  <Button id='#d9d9d9' onClick={setFontColor} color="Lighter Gray"></Button>
+                  <Button id='#ffffff' onClick={setFontColor} color="White"></Button> <br />
                   <Button id='#ff3131' onClick={setFontColor} color="Bright Red"></Button>
                   <Button id='#ff5757' onClick={setFontColor} color="Coral Red"></Button>
                   <Button id='#ff66c4' onClick={setFontColor} color="Pink"></Button>
@@ -173,8 +173,8 @@ function App() {
                   <Button id='#ffde59' onClick={setFontColor} color="Yellow"></Button>
                   <Button id='#ffbd59' onClick={setFontColor} color="Peach"></Button>
                   <Button id='#ff914d' onClick={setFontColor} color="Orange"></Button>
-                  <Slider defaultValue={50} onChange={setFontSize} sx={{ marginTop: '5%' }} />
-                  <Checkbox checked sx={{ marginTop: "5%" }} label="Add text shadow to header" />
+                  <Slider defaultValue={100} onChange={setFontSize} sx={{ marginTop: '5%' }} />
+                  {/* <Checkbox checked sx={{ marginTop: "5%" }} label="Add text shadow to header" /> */}
                   {/* <NumberInput
                     onChange={setImageHeight}
                     radius="md"
