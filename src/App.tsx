@@ -5,11 +5,11 @@ import { TextInput, Slider, RangeSlider } from '@mantine/core';
 import { Button, Card, Text, Group, FileButton, BackgroundImage, Image as MantineImage } from '@mantine/core';
 import { Container, Grid, SimpleGrid, Skeleton, useMantineTheme, rem } from '@mantine/core';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
-import { Checkbox, NumberInput } from '@mantine/core';
-import CroppedImage from './components/CroppedImage';
+import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react'
+import { Checkbox, NumberInput } from '@mantine/core'
+import CroppedImage from './components/CroppedImage'
 
-import TintedImage from './components/TintedImage';
+import TintedImage from './components/TintedImage'
 
 const PRIMARY_COL_HEIGHT = rem(500);
 
