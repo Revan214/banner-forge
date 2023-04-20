@@ -9,7 +9,7 @@ import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react'
 import { Checkbox, NumberInput } from '@mantine/core'
 import CroppedImage from './components/CroppedImage'
 
-import TintedImage from './components/TintedImage'
+import TintedImage from "./components/TintedImage"
 
 const PRIMARY_COL_HEIGHT = rem(500);
 
